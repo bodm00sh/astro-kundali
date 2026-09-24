@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AstroAI - Cosmic Reading</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="stars"></div>
+
+<div class="container">
+
+    <div class="logo">
+        ✦ AstroAI
+    </div>
+
+    <h1>
+        Discover Your Cosmic Story
+    </h1>
+
+    <p class="subtitle">
+        Enter your birth details and explore an
+        astrology-style personalized reading.
+    </p>
+
+
+    {% if not result %}
+
+    <form action="/predict" method="POST">
+
+        <label for="name">
+            Your Name
+        </label>
+
+        <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your name"
+            required
+        >
+
+
+        <label for="dob">
+            Date of Birth
+        </label>
+
+        <input
+            type="date"
+            id="dob"
+            name="dob"
+            required
+        >
+
+
+        <label for="birth_time">
+            Time of Birth
+        </label>
+
+        <input
+            type="time"
+            id="birth_time"
+            name="birth_time"
+            required
+        >
+
+
+        <label for="birth_place">
+            Place of Birth
+        </label>
+
+        <input
+            type="text"
+            id="birth_place"
+            name="birth_place"
+            placeholder="Example: Bangalore, India"
+            required
+        >
+
+
+        <label for="question">
+            What do you want to know?
+        </label>
+
+        <textarea
+            id="question"
+            name="question"
+            placeholder="Example: What does my career path look like?"
+            required
+        ></textarea>
+
+
+        <button type="submit">
+            ✨ Generate My Reading
+        </button>
+
+    </form>
+
+
+    {% else %}
+
+    <div class="result">
+
+        <h2>
+            ✨ {{ name }}'s Astro Reading
+        </h2>
+
+
+        <div class="card">
+
+            <h3>🌙 Personality</h3>
+
+            <p>
+                {{ result.personality }}
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>📜 Past Themes</h3>
+
+            <p>
+                {{ result.past }}
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>💼 Career</h3>
+
+            <p>
+                {{ result.career }}
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>❤️ Relationships</h3>
+
+            <p>
+                {{ result.relationships }}
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>🔮 Future Themes</h3>
+
+            <p>
+                {{ result.future }}
+            </p>
+
+        </div>
+
+
+        <div class="question-box">
+
+            <strong>Your Question:</strong>
+
+            <p>
+                {{ result.question }}
+            </p>
+
+        </div>
+
+
+        <a href="/" class="back-button">
+            ← Create Another Reading
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+    <div class="disclaimer">
+
+        ⚠️ Astrology-style interpretation for
+        entertainment and personal reflection.
+        It is not scientifically proven future prediction.
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
