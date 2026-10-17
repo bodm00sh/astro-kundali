@@ -76,6 +76,75 @@ def generate_reading(name, dob, birth_time, birth_place, question):
 
     question_lower = question.lower()
 
+if any(word in question_lower for word in [
+    "career", "job", "work", "study", "college",
+    "internship", "exam", "education"
+]):
+    question_response = (
+        f"Your question is about career or studies: '{question}'. "
+        "Consider your current skills, available opportunities, "
+        "and the steps you can take next. Break your goal into "
+        "small actions and review your progress regularly."
+    )
+
+elif any(word in question_lower for word in [
+    "love", "relationship", "marriage", "partner", "friend"
+]):
+    question_response = (
+        f"Your question is about relationships: '{question}'. "
+        "Consider honest communication, mutual respect, and "
+        "whether both people feel comfortable and understood. "
+        "Real conversations are more useful than assumptions."
+    )
+
+elif any(word in question_lower for word in [
+    "money", "finance", "wealth", "business", "income"
+]):
+    question_response = (
+        f"Your question is about finances: '{question}'. "
+        "Consider your goals, budget, skills, and available "
+        "options. Compare risks carefully before making "
+        "financial decisions rather than relying on predictions."
+    )
+
+elif any(word in question_lower for word in [
+    "health", "illness", "sick", "disease", "medicine"
+]):
+    question_response = (
+        f"You asked about health: '{question}'. "
+        "Astrology cannot diagnose health conditions or predict "
+        "medical outcomes. For health concerns, consult a "
+        "qualified healthcare professional."
+    )
+
+elif any(word in question_lower for word in [
+    "family", "parent", "mother", "father", "home"
+]):
+    question_response = (
+        f"Your question is about family: '{question}'. "
+        "Consider listening carefully, communicating calmly, "
+        "and identifying practical steps that may improve "
+        "understanding within your family."
+    )
+
+elif any(word in question_lower for word in [
+    "travel", "trip", "journey", "abroad"
+]):
+    question_response = (
+        f"Your question is about travel: '{question}'. "
+        "Consider your destination, budget, schedule, safety, "
+        "and travel requirements before making a plan."
+    )
+
+else:
+    question_response = (
+        f"You asked: '{question}'. "
+        "Use this reading as a prompt for reflection rather "
+        "than a factual prediction. Think about what you know "
+        "about the situation, what remains uncertain, and "
+        "which practical step you can take next."
+    )
+
     if any(word in question_lower for word in ["career", "job", "work", "study", "college"]):
         question_response = (
             f"Regarding your question about career or studies, {name}, "
