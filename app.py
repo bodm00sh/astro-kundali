@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
@@ -10,7 +11,6 @@ def home():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-
     name = request.form.get("name", "").strip()
     dob = request.form.get("dob", "").strip()
     birth_time = request.form.get("birth_time", "").strip()
@@ -18,11 +18,7 @@ def predict():
     question = request.form.get("question", "").strip()
 
     reading = generate_reading(
-        name,
-        dob,
-        birth_time,
-        birth_place,
-        question
+        name, dob, birth_time, birth_place, question
     )
 
     return render_template(
@@ -33,173 +29,142 @@ def predict():
 
 
 def generate_reading(name, dob, birth_time, birth_place, question):
+    name = name or "You"
+    dob = dob or "Not provided"
+    birth_time = birth_time or "Not provided"
+    birth_place = birth_place or "Not provided"
+    question = question or "your future"
 
-    # Simple dynamic logic based on user's inputs
-    name = name if name else "You"
-    birth_place = birth_place if birth_place else "your birthplace"
-    question = question if question else "your future"
-
-    # Create a simple number from DOB
-    dob_digits = "".join(c for c in dob if c.isdigit())
+    # Create a simple numerology-style number from DOB
+    dob_digits = "".join(char for char in dob if char.isdigit())
 
     if dob_digits:
         birth_number = sum(int(digit) for digit in dob_digits)
 
         while birth_number > 9:
-            birth_number = sum(int(digit) for digit in str(birth_number))
+            birth_number = sum(
+                int(digit) for digit in str(birth_number)
+            )
     else:
         birth_number = 5
 
     personality_readings = {
-        1: "You may have an independent nature and often prefer taking initiative rather than waiting for others.",
-        2: "You may value cooperation, patience and emotional understanding in your interactions with others.",
-        3: "You may have a creative side and enjoy expressing ideas through communication, learning or new experiences.",
-        4: "You may prefer structure, consistency and practical approaches when working toward your goals.",
-        5: "You may enjoy variety, exploration and learning through different experiences.",
-        6: "You may place importance on relationships, responsibility and maintaining harmony with people around you.",
-        7: "You may be naturally curious and interested in understanding things more deeply before making decisions.",
-        8: "You may be strongly focused on achievement, progress and building something meaningful over time.",
-        9: "You may have a broad outlook and may be drawn toward experiences that involve helping, learning or personal growth."
+        1: "You may be independent and enjoy taking initiative.",
+        2: "You may value cooperation, patience and understanding.",
+        3: "You may enjoy creativity, communication and learning.",
+        4: "You may prefer structure, consistency and practical plans.",
+        5: "You may enjoy variety, exploration and new experiences.",
+        6: "You may value relationships, responsibility and harmony.",
+        7: "You may be curious and enjoy deeper thinking.",
+        8: "You may focus on achievement and long-term goals.",
+        9: "You may value personal growth and helping others."
     }
 
     career_readings = {
-        1: "Your career theme can be explored through leadership, independent projects and taking responsibility.",
-        2: "Work involving teamwork, coordination and communication may suit your interests.",
-        3: "Creative, communication and technology-related areas may provide interesting opportunities to explore.",
-        4: "Technical, analytical and structured fields may be worth exploring as you develop your skills.",
-        5: "You may enjoy careers that offer variety, technology, communication or opportunities to learn new things.",
-        6: "People-oriented work, management, design or service-related areas may be interesting to explore.",
-        7: "Research, analysis, technology and areas requiring deeper thinking may appeal to you.",
-        8: "Business, management, technology and goal-oriented professional paths may interest you.",
-        9: "Fields involving communication, creativity, social impact or broad experiences may appeal to you."
+        1: "Leadership and independent projects may interest you.",
+        2: "Teamwork and coordination may suit your interests.",
+        3: "Creative work, communication and technology may interest you.",
+        4: "Technical, analytical and structured work may appeal to you.",
+        5: "You may enjoy varied work and continuous learning.",
+        6: "Management, design and people-focused work may interest you.",
+        7: "Research, analysis and technology may appeal to you.",
+        8: "Business, management and goal-oriented work may interest you.",
+        9: "Communication, creativity and social impact may interest you."
     }
 
     question_lower = question.lower()
 
-if any(word in question_lower for word in [
-    "career", "job", "work", "study", "college",
-    "internship", "exam", "education"
-]):
-    question_response = (
-        f"Your question is about career or studies: '{question}'. "
-        "Consider your current skills, available opportunities, "
-        "and the steps you can take next. Break your goal into "
-        "small actions and review your progress regularly."
-    )
-
-elif any(word in question_lower for word in [
-    "love", "relationship", "marriage", "partner", "friend"
-]):
-    question_response = (
-        f"Your question is about relationships: '{question}'. "
-        "Consider honest communication, mutual respect, and "
-        "whether both people feel comfortable and understood. "
-        "Real conversations are more useful than assumptions."
-    )
-
-elif any(word in question_lower for word in [
-    "money", "finance", "wealth", "business", "income"
-]):
-    question_response = (
-        f"Your question is about finances: '{question}'. "
-        "Consider your goals, budget, skills, and available "
-        "options. Compare risks carefully before making "
-        "financial decisions rather than relying on predictions."
-    )
-
-elif any(word in question_lower for word in [
-    "health", "illness", "sick", "disease", "medicine"
-]):
-    question_response = (
-        f"You asked about health: '{question}'. "
-        "Astrology cannot diagnose health conditions or predict "
-        "medical outcomes. For health concerns, consult a "
-        "qualified healthcare professional."
-    )
-
-elif any(word in question_lower for word in [
-    "family", "parent", "mother", "father", "home"
-]):
-    question_response = (
-        f"Your question is about family: '{question}'. "
-        "Consider listening carefully, communicating calmly, "
-        "and identifying practical steps that may improve "
-        "understanding within your family."
-    )
-
-elif any(word in question_lower for word in [
-    "travel", "trip", "journey", "abroad"
-]):
-    question_response = (
-        f"Your question is about travel: '{question}'. "
-        "Consider your destination, budget, schedule, safety, "
-        "and travel requirements before making a plan."
-    )
-
-else:
-    question_response = (
-        f"You asked: '{question}'. "
-        "Use this reading as a prompt for reflection rather "
-        "than a factual prediction. Think about what you know "
-        "about the situation, what remains uncertain, and "
-        "which practical step you can take next."
-    )
-
-    if any(word in question_lower for word in ["career", "job", "work", "study", "college"]):
+    if any(word in question_lower for word in [
+        "career", "job", "work", "study", "college",
+        "internship", "exam", "education", "placement"
+    ]):
         question_response = (
-            f"Regarding your question about career or studies, {name}, "
-            f"your reading suggests focusing on consistent skill development "
-            f"and making decisions based on your actual interests and opportunities."
+            f"You asked: '{question}'. For career or studies, "
+            "identify your goal, improve relevant skills, and make "
+            "a realistic plan. Review your progress and explore "
+            "opportunities that match your interests."
         )
 
-    elif any(word in question_lower for word in ["love", "relationship", "marriage"]):
+    elif any(word in question_lower for word in [
+        "love", "relationship", "marriage", "partner", "friend"
+    ]):
         question_response = (
-            f"Regarding your relationship question, {name}, "
-            f"communication, mutual respect and understanding are important "
-            f"factors to consider. Your circumstances and choices will shape "
-            f"how relationships develop."
+            f"You asked: '{question}'. In relationships, consider "
+            "honest communication, mutual respect and how both "
+            "people feel. Avoid assuming what someone thinks; "
+            "a respectful conversation can provide clarity."
         )
 
-    elif any(word in question_lower for word in ["money", "finance", "wealth", "business"]):
+    elif any(word in question_lower for word in [
+        "money", "finance", "wealth", "business", "income"
+    ]):
         question_response = (
-            f"Regarding your financial question, {name}, "
-            f"the reading points toward gradual development through planning, "
-            f"learning and responsible decisions rather than relying only on luck."
+            f"You asked: '{question}'. Consider your goals, budget, "
+            "available options and risks. Planning and informed "
+            "decisions are more dependable than predictions."
+        )
+
+    elif any(word in question_lower for word in [
+        "health", "illness", "sick", "disease", "medicine"
+    ]):
+        question_response = (
+            f"You asked: '{question}'. Astrology cannot diagnose "
+            "illness or predict medical outcomes. For health "
+            "concerns, consult a qualified healthcare professional."
+        )
+
+    elif any(word in question_lower for word in [
+        "family", "parent", "mother", "father", "home"
+    ]):
+        question_response = (
+            f"You asked: '{question}'. Calm communication, listening "
+            "and understanding each other's perspectives may help. "
+            "Focus on practical steps you can take."
+        )
+
+    elif any(word in question_lower for word in [
+        "travel", "trip", "journey", "abroad"
+    ]):
+        question_response = (
+            f"You asked: '{question}'. Consider your destination, "
+            "budget, schedule, safety and travel requirements "
+            "when deciding your next steps."
         )
 
     else:
         question_response = (
-            f"Regarding your question, '{question}', "
-            f"this astrology-style reading suggests looking at the situation "
-            f"with patience and considering both opportunities and practical circumstances."
+            f"You asked: '{question}'. Use this astrology-style "
+            "reading for reflection, not as a guaranteed prediction. "
+            "Consider what you know, what remains uncertain, and "
+            "what practical step you can take next."
         )
 
     return {
         "personality": (
-            f"{name}, based on the birth details you entered "
-            f"({dob}, {birth_time}, {birth_place}), your astrology-style "
-            f"personality reading suggests: {personality_readings[birth_number]}"
+            f"{name}, based on the details you entered "
+            f"({dob}, {birth_time}, {birth_place}), your "
+            f"astrology-style personality reading suggests: "
+            f"{personality_readings[birth_number]}"
         ),
 
         "past": (
-            f"Your past reading suggests that experiences connected with "
-            f"learning, changing interests and personal development may have "
-            f"played an important role in shaping your current outlook."
+            "Your past experiences may have helped shape your "
+            "interests, perspective and personal development. "
+            "Reflect on what you have learned from them."
         ),
 
         "career": career_readings[birth_number],
 
         "relationships": (
-            f"For relationships, {name}, open communication and mutual "
-            f"understanding can be important. Different stages of life may "
-            f"bring changes in your social connections."
+            "Open communication, respect and understanding can "
+            "help build healthy relationships. Your choices and "
+            "circumstances matter."
         ),
 
         "future": (
-            f"Your future reading suggests a period of gradual development. "
-            f"New opportunities may come through learning and experience, "
-            f"but the actual outcome will depend on your decisions, effort "
-            f"and circumstances."
+            "Your future depends on many factors, including your "
+            "decisions, effort and circumstances. Learning, planning "
+            "and adapting can help you prepare for opportunities."
         ),
 
         "question": question_response
